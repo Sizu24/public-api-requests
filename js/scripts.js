@@ -3,6 +3,7 @@ const searchBar = document.querySelector(".search-container");
 const gallery = document.getElementById("gallery");
 let userProfiles = [];
 
+
 // Reusable fetch function
 
 /**
@@ -103,18 +104,50 @@ function createModal(data, num){
     gallery.insertAdjacentHTML('afterend', modal);
 }
 
+// Searchbar
+const showSearchBar = ()=>{
+    const searchBarHTML = `
+    <form action="#" method="get">
+        <input type="search" id="search-input" class="search-input" placeholder="Search...">
+        <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
+    </form>
+`
+searchBar.insertAdjacentHTML('beforeend', searchBarHTML);
+}
+
+// create searchbar
+showSearchBar();
+
+// search User
+const searchInput = document.querySelector("#search-input");
+searchInput.addEventListener("keyup", ()=>{
+    const card = document.querySelectorAll(".card");
+    const users = document.querySelectorAll(".card-name");
+    let userInput = searchInput.value.toLowerCase();
+
+    for(let i = 0; i < users.length; i++){
+        let profileNames = users[i].textContent.toLowerCase();
+        if(profileNames.indexOf(userInput) !== -1){
+            card[i].style.display = "flex";
+        }else{
+            card[i].style.display = "none";
+        }
+    }
+});
+
 // Create profiles on HTML page
 for(let i = 0; i < 12; i++){
     createCard();
 
     fetchData(url)
         .then(data => {
-            generateImage(data, i)
-            generateInfo(data, i)
+            generateImage(data, i);
+            generateInfo(data, i);
             userProfiles.push(data);
         })
 }
 
+// Show modal on profile click
 gallery.addEventListener("click", (e)=>{
     if(e.target.closest(".card")){
         const cardNumber = document.querySelectorAll(".card");
@@ -133,5 +166,6 @@ document.addEventListener("click", (e)=>{
     }
 });
 
+// Switch profiles in modal view
 
 
