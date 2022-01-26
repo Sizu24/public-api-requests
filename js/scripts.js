@@ -1,10 +1,11 @@
+/************ Global Variables ************/
+
 const url = "https://randomuser.me/api/?nat=us";
 const searchBar = document.querySelector(".search-container");
 const gallery = document.getElementById("gallery");
 let userProfiles = [];
 
-
-// Reusable fetch function
+/************ Reusable fetch function ************/
 
 /**
  * Return fetch with url as parameter
@@ -21,8 +22,60 @@ function fetchData(url){
         .catch(err => console.log("Something didn't work -->", err));
 }
 
+/************ Create Profiles ************/
 
-// Helper functions
+// Create profiles on HTML page
+for(let i = 0; i < 12; i++){
+    createCard();
+
+    fetchData(url)
+        .then(data => {
+            generateImage(data, i);
+            generateInfo(data, i);
+            userProfiles.push(data);
+        })
+}
+
+/************ Search Bar ************/
+
+// create searchbar
+const searchBarHTML = `
+<form action="#" method="get">
+    <input type="search" id="search-input" class="search-input" placeholder="Search...">
+    <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
+</form>
+`
+// Add searchbar HTML code to searchbar container
+searchBar.insertAdjacentHTML('beforeend', searchBarHTML);
+
+// search User
+const searchInput = document.querySelector("#search-input");
+
+/**
+ * Event Listener listens for keypress
+ * Cards variable for card list in HTML, Users variable for names inside cards
+ * Loop through profile names
+ * Takes user input and finds index of profile names that match user input user input
+ * If index is found, display flex on card
+ * Otherwise display none on cards that come up -1 for indexOf
+ */
+searchInput.addEventListener("keyup", ()=>{
+    const cards = document.querySelectorAll(".card");
+    const users = document.querySelectorAll(".card-name");
+
+    for(let i = 0; i < users.length; i++){
+        let userInput = searchInput.value.toLowerCase();
+        let profileNames = users[i].textContent.toLowerCase();
+        
+        if(profileNames.indexOf(userInput) !== -1){
+            cards[i].style.display = "flex";
+        }else{
+            cards[i].style.display = "none";
+        }
+    }
+});
+
+/************ Helper Functions ************/
 
 /**
  * Check if response === ok
@@ -76,6 +129,9 @@ function generateInfo(data, num){
     card[num].innerHTML += info;
 }
 
+/************ Modal ************/
+
+// HTML Code for modal, uses data from userProfiles array, and index number from fetch loop
 function createModal(data, num){
     const modal = `
         <div class="modal-container">
@@ -101,53 +157,17 @@ function createModal(data, num){
             </div>
         </div>
         `;
+
+    // insert Modal HTML after gallery code
     gallery.insertAdjacentHTML('afterend', modal);
 }
 
-// Searchbar
-const showSearchBar = ()=>{
-    const searchBarHTML = `
-    <form action="#" method="get">
-        <input type="search" id="search-input" class="search-input" placeholder="Search...">
-        <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
-    </form>
-`
-searchBar.insertAdjacentHTML('beforeend', searchBarHTML);
-}
-
-// create searchbar
-showSearchBar();
-
-// search User
-const searchInput = document.querySelector("#search-input");
-searchInput.addEventListener("keyup", ()=>{
-    const card = document.querySelectorAll(".card");
-    const users = document.querySelectorAll(".card-name");
-    let userInput = searchInput.value.toLowerCase();
-
-    for(let i = 0; i < users.length; i++){
-        let profileNames = users[i].textContent.toLowerCase();
-        if(profileNames.indexOf(userInput) !== -1){
-            card[i].style.display = "flex";
-        }else{
-            card[i].style.display = "none";
-        }
-    }
-});
-
-// Create profiles on HTML page
-for(let i = 0; i < 12; i++){
-    createCard();
-
-    fetchData(url)
-        .then(data => {
-            generateImage(data, i);
-            generateInfo(data, i);
-            userProfiles.push(data);
-        })
-}
-
-// Show modal on profile click
+/**
+ * Show modal on profile click
+ * If card is clicked, loop through cards
+ * Find card index that matches clicked card
+ * User index to create modal for clicked card
+ */
 gallery.addEventListener("click", (e)=>{
     if(e.target.closest(".card")){
         const cardNumber = document.querySelectorAll(".card");
@@ -159,7 +179,10 @@ gallery.addEventListener("click", (e)=>{
     }
 });
 
-// Event listener for pressing "X" on modal
+/**
+ * Event listener for pressing "X" on modal
+ * If clicked on X, or clicked on modal container, set display to none
+ */
 document.addEventListener("click", (e)=>{
     if(e.target.closest(".modal-close-btn") || e.target.closest(".modal-container")){
         document.querySelector(".modal-container").style.display = "none";
