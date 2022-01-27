@@ -3,7 +3,8 @@
 const url = "https://randomuser.me/api/?nat=us";
 const searchBar = document.querySelector(".search-container");
 const gallery = document.getElementById("gallery");
-let userProfiles = [];
+const userProfiles = [];
+let modalIndex = 0;
 
 /************ Reusable fetch function ************/
 
@@ -132,22 +133,25 @@ function generateInfo(data, num){
 /************ Modal ************/
 
 // HTML Code for modal, uses data from userProfiles array, and index number from fetch loop
-function createModal(data, num){
-    const modal = `
+function createModal(num){
+
+    let {name, email, location, dob, phone, picture} = userProfiles[num];
+    
+    modal = `
         <div class="modal-container">
             <div class="modal">
                 <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
                 <div class="modal-info-container">
-                    <img class="modal-img" src="${data[num].picture.large}" alt="Profile picture of ${data[num].name.first} ${data[num].name.last}">
-                    <h3 id="name" class="modal-name cap">${data[num].name.first} ${data[num].name.last}</h3>
-                    <p class="modal-text">${data[num].email}</p>
-                    <p class="modal-text cap">${data[num].location.city}</p>
+                    <img class="modal-img" src="${picture.large}" alt="Profile picture of ${name.first} ${name.last}">
+                    <h3 id="name" class="modal-name cap">${name.first} ${name.last}</h3>
+                    <p class="modal-text">${email}</p>
+                    <p class="modal-text cap">${location.city}</p>
                     <hr>
-                    <p class="modal-text">${data[num].phone}</p>\
-                    <p class="modal-text">${data[num].location.street.number} ${data[num].location.street.name},\
-                    ${data[num].location.city}, ${data[num].location.state} ${data[num].location.postcode}\
+                    <p class="modal-text">${phone}</p>\
+                    <p class="modal-text">${location.street.number} ${location.street.name},\
+                    ${location.city}, ${location.state} ${location.postcode}\
                     </p>
-                    <p class="modal-text">Birthday: ${data[num].dob.date}</p>
+                    <p class="modal-text">Birthday: ${dob.date}</p>
                 </div>
             </div>
 
@@ -158,37 +162,65 @@ function createModal(data, num){
         </div>
         `;
 
-    // insert Modal HTML after gallery code
-    gallery.insertAdjacentHTML('afterend', modal);
+        gallery.insertAdjacentHTML('afterend', modal);
 }
 
+function showNext(){
+    modalIndex += 1;
+    createModal(modalIndex);
+}
+
+function showPrevious(){
+    modalIndex -= 1;
+    createModal(modalIndex);
+}
 /**
  * Show modal on profile click
  * If card is clicked, loop through cards
  * Find card index that matches clicked card
  * User index to create modal for clicked card
  */
-gallery.addEventListener("click", (e)=>{
+window.addEventListener("click", (e)=>{
     if(e.target.closest(".card")){
         const cardNumber = document.querySelectorAll(".card");
         for(let i = 0; i < cardNumber.length; i++){
             if(cardNumber[i] === e.target.closest(".card")){
-                createModal(userProfiles, i);
+                modalIndex = i;
+                // insert Modal HTML after gallery code
+                createModal(i);
+                console.log(userProfiles[i]);
             }
         }
     }
+    const previousButton = document.querySelector("#modal-prev");
+    const nextButton = document.querySelector("#modal-next");
+
+    previousButton.addEventListener("click", ()=>{
+        if(modalIndex > 0){
+            gallery.nextElementSibling.remove();
+            showPrevious();
+        }
+        console.log(modalIndex);
+    });
+    
+    nextButton.addEventListener("click", ()=>{
+        if(modalIndex < 13){
+            gallery.nextElementSibling.remove();
+            showNext();
+        }
+        console.log(modalIndex);
+    });
 });
+
 
 /**
  * Event listener for pressing "X" on modal
  * If clicked on X, or clicked on modal container, set display to none
  */
 document.addEventListener("click", (e)=>{
-    if(e.target.closest(".modal-close-btn") || e.target.closest(".modal-container")){
+    if(e.target.closest(".modal-close-btn")){
         document.querySelector(".modal-container").style.display = "none";
     }
 });
-
-// Switch profiles in modal view
 
 
