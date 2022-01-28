@@ -145,8 +145,9 @@ function createModal(num){
 
     let {name, email, location, dob, phone, picture} = userProfiles[num];
     let date = new Date(dob.date);
+    // regex replaces first dash in phone number with space
     let phoneNumber = phone.replace(/-/, " ");
-    
+
     modal = `
         <div class="modal-container">
             <div class="modal">
