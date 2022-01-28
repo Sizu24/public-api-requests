@@ -130,6 +130,10 @@ function generateInfo(data, num){
     card[num].innerHTML += info;
 }
 
+/**
+ * User fetched data to display user profiles
+ * Loop 12 times to run functions to create cards, and input user info
+ */
 function displayUsers(userData){
     for(let i = 0; i < userProfiles.length; i++){
         createCard();
