@@ -86,16 +86,17 @@ header h1 {
     margin: 10px 10px 20px;
     padding: 10px;
     background: rgba(245, 245, 245, 0.9);
-    border-radius: 0.25em;
-    border: 1px solid rgba(50, 50, 50, 0.3);
-    transition: .4s ease-out;
+    border-radius: 1.0em;
+    border: none;
+    transition: .4s ease-in-out;
     overflow: hidden;
+    box-shadow: 5px 10px 20px rgba(200, 200, 200, 0.5);
 }
 
 .card-img {
     width: 95px;
     margin: 10px 15px auto 10px;
-    border-radius: 50%;
+    border-radius: 8%;
 }
 
 .card-info-container {
@@ -110,7 +111,7 @@ header h1 {
     font-size: 0.9em;
     color: rgba(50, 50, 50, 0.7);
     margin: 7px auto;
-    transition: .4s ease-out;
+    transition: .4s ease-in-out;
 }
 
 .cap {

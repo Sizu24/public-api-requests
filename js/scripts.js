@@ -25,7 +25,11 @@ function fetchData(url){
 
 /************ Create Profiles ************/
 
-// Create profiles on HTML page
+/**
+ * Create profiles on HTML page
+ * Loop to create 12 profiles
+ * Push data to userProfiles variable for use outside of function
+ */
 for(let i = 0; i < 12; i++){
     createCard();
 
@@ -39,7 +43,7 @@ for(let i = 0; i < 12; i++){
 
 /************ Search Bar ************/
 
-// create searchbar
+// Searchbar HTML code
 const searchBarHTML = `
 <form action="#" method="get">
     <input type="search" id="search-input" class="search-input" placeholder="Search...">
@@ -49,7 +53,7 @@ const searchBarHTML = `
 // Add searchbar HTML code to searchbar container
 searchBar.insertAdjacentHTML('beforeend', searchBarHTML);
 
-// search User
+// Select search input bar
 const searchInput = document.querySelector("#search-input");
 
 /**
@@ -132,7 +136,11 @@ function generateInfo(data, num){
 
 /************ Modal ************/
 
-// HTML Code for modal, uses data from userProfiles array, and index number from fetch loop
+/**
+ * HTML Code for modal
+ * Uses data from userProfiles array to create object for profile info
+ * Index number from targeted profile or from next/previous function
+ */
 function createModal(num){
 
     let {name, email, location, dob, phone, picture} = userProfiles[num];
@@ -165,51 +173,58 @@ function createModal(num){
         gallery.insertAdjacentHTML('afterend', modal);
 }
 
+/**
+ * Functions to show next or previous profiles in modal
+ * Increases or decreases index number
+ * Removes existing modal code from HTML to prevent duplicate
+ * Run createModal function with new index as parameter
+ */
 function showNext(){
     modalIndex += 1;
+    gallery.nextElementSibling.remove();
     createModal(modalIndex);
 }
 
 function showPrevious(){
     modalIndex -= 1;
+    gallery.nextElementSibling.remove();
     createModal(modalIndex);
 }
 /**
  * Show modal on profile click
  * If card is clicked, loop through cards
  * Find card index that matches clicked card
- * User index to create modal for clicked card
+ * Use index of card to create modal for clicked card
  */
+
 window.addEventListener("click", (e)=>{
     if(e.target.closest(".card")){
         const cardNumber = document.querySelectorAll(".card");
         for(let i = 0; i < cardNumber.length; i++){
             if(cardNumber[i] === e.target.closest(".card")){
+                // save index number for selected profile
                 modalIndex = i;
                 // insert Modal HTML after gallery code
                 createModal(i);
-                console.log(userProfiles[i]);
             }
         }
     }
-    const previousButton = document.querySelector("#modal-prev");
-    const nextButton = document.querySelector("#modal-next");
 
-    previousButton.addEventListener("click", ()=>{
+    /**
+     * If clicked target is Modal's "previous" or "next" button
+     * Check to see if Modal is showing first or last profile in list
+     * Run functions to move to previous or next profile
+     */
+    if(e.target.closest("#modal-prev")){
         if(modalIndex > 0){
-            gallery.nextElementSibling.remove();
             showPrevious();
         }
-        console.log(modalIndex);
-    });
-    
-    nextButton.addEventListener("click", ()=>{
-        if(modalIndex < 13){
-            gallery.nextElementSibling.remove();
+    }   
+    if(e.target.closest("#modal-next")){
+        if(modalIndex < 11){
             showNext();
         }
-        console.log(modalIndex);
-    });
+    }
 });
 
 
