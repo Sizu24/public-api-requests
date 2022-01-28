@@ -1,9 +1,9 @@
 /* --------------- Global Variables --------------- */
 
-const url = "https://randomuser.me/api/?nat=us";
+const url = "https://randomuser.me/api/?results=12&nat=us";
 const searchBar = document.querySelector(".search-container");
 const gallery = document.getElementById("gallery");
-const userProfiles = [];
+let userProfiles = [];
 let modalIndex = 0;
 
 /* --------------- Reusable fetch function --------------- */
@@ -12,14 +12,14 @@ let modalIndex = 0;
  * Return fetch with url as parameter
  * run checkStatus function
  * take the response and parse the JSON data
- * take the parsed data, and return the data from the 0 index in the results key
+ * take the parsed data, and return the results
  * if error, catch the error and show error in console
  */
 function fetchData(url){
     return fetch(url)
         .then(checkStatus)
         .then(res => res.json())
-        .then(data => data.results[0])
+        .then(data => data.results)
         .catch(err => console.log("Something didn't work -->", err));
 }
 
@@ -27,19 +27,14 @@ function fetchData(url){
 
 /**
  * Create profiles on HTML page
- * Loop to create 12 profiles
  * Push data to userProfiles variable for use outside of function
  */
-for(let i = 0; i < 12; i++){
-    createCard();
 
-    fetchData(url)
-        .then(data => {
-            generateImage(data, i);
-            generateInfo(data, i);
-            userProfiles.push(data);
-        })
-}
+fetchData(url)
+    .then(data => {
+        userProfiles = data;
+        displayUsers(data);
+    })
 
 /* --------------- Search Bar --------------- */
 
@@ -112,7 +107,7 @@ function generateImage(data, num){
     const card = document.querySelectorAll(".card");
     const profileImage = `
         <div class="card-img-container">
-            <img class="card-img" src="${data.picture.medium}" alt="Profile picture of ${data.title} ${data.last}">
+            <img class="card-img" src="${data[num].picture.medium}" alt="Profile picture of ${data[num].title} ${data[num].last}">
         </div>
     `;
     card[num].innerHTML += profileImage;
@@ -127,13 +122,22 @@ function generateInfo(data, num){
     const card = document.querySelectorAll(".card");
     const info = `
         <div class="card-info-container">
-            <h3 id="name" class="card-name cap">${data.name.first} ${data.name.last}</h3>
+            <h3 id="name" class="card-name cap">${data[num].name.first} ${data[num].name.last}</h3>
             <p class="card-text">${data.email}</p>
-            <p class="card-text cap">${data.location.city}, ${data.location.state}</p>
+            <p class="card-text cap">${data[num].location.city}, ${data[num].location.state}</p>
         </div>
     `;
     card[num].innerHTML += info;
 }
+
+function displayUsers(userData){
+    for(let i = 0; i < userProfiles.length; i++){
+        createCard();
+        generateImage(userData, i);
+        generateInfo(userData, i);
+    }
+}
+
 
 /* --------------- Modal --------------- */
 
