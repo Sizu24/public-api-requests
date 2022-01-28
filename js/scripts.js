@@ -144,6 +144,8 @@ function generateInfo(data, num){
 function createModal(num){
 
     let {name, email, location, dob, phone, picture} = userProfiles[num];
+    let date = new Date(dob.date);
+    let phoneNumber = phone.replace(/-/, " ");
     
     modal = `
         <div class="modal-container">
@@ -155,11 +157,11 @@ function createModal(num){
                     <p class="modal-text">${email}</p>
                     <p class="modal-text cap">${location.city}</p>
                     <hr>
-                    <p class="modal-text">${phone}</p>\
+                    <p class="modal-text">${phoneNumber}</p>\
                     <p class="modal-text">${location.street.number} ${location.street.name},\
                     ${location.city}, ${location.state} ${location.postcode}\
                     </p>
-                    <p class="modal-text">Birthday: ${dob.date}</p>
+                    <p class="modal-text">Birthday: ${date.getMonth()}/${date.getDate()}/${date.getFullYear()}</p>
                 </div>
             </div>
 
