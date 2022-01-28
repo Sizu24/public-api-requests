@@ -1,4 +1,4 @@
-/************ Global Variables ************/
+/* --------------- Global Variables --------------- */
 
 const url = "https://randomuser.me/api/?nat=us";
 const searchBar = document.querySelector(".search-container");
@@ -6,7 +6,7 @@ const gallery = document.getElementById("gallery");
 const userProfiles = [];
 let modalIndex = 0;
 
-/************ Reusable fetch function ************/
+/* --------------- Reusable fetch function --------------- */
 
 /**
  * Return fetch with url as parameter
@@ -23,7 +23,7 @@ function fetchData(url){
         .catch(err => console.log("Something didn't work -->", err));
 }
 
-/************ Create Profiles ************/
+/* --------------- Create Profiles --------------- */
 
 /**
  * Create profiles on HTML page
@@ -41,7 +41,7 @@ for(let i = 0; i < 12; i++){
         })
 }
 
-/************ Search Bar ************/
+/* --------------- Search Bar --------------- */
 
 // Searchbar HTML code
 const searchBarHTML = `
@@ -49,7 +49,8 @@ const searchBarHTML = `
     <input type="search" id="search-input" class="search-input" placeholder="Search...">
     <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
 </form>
-`
+`;
+
 // Add searchbar HTML code to searchbar container
 searchBar.insertAdjacentHTML('beforeend', searchBarHTML);
 
@@ -80,7 +81,7 @@ searchInput.addEventListener("keyup", ()=>{
     }
 });
 
-/************ Helper Functions ************/
+/* --------------- Helper Functions --------------- */
 
 /**
  * Check if response === ok
@@ -113,7 +114,7 @@ function generateImage(data, num){
         <div class="card-img-container">
             <img class="card-img" src="${data.picture.medium}" alt="Profile picture of ${data.title} ${data.last}">
         </div>
-    `
+    `;
     card[num].innerHTML += profileImage;
 }
 
@@ -130,11 +131,11 @@ function generateInfo(data, num){
             <p class="card-text">${data.email}</p>
             <p class="card-text cap">${data.location.city}, ${data.location.state}</p>
         </div>
-    `
+    `;
     card[num].innerHTML += info;
 }
 
-/************ Modal ************/
+/* --------------- Modal --------------- */
 
 /**
  * HTML Code for modal
@@ -229,7 +230,6 @@ window.addEventListener("click", (e)=>{
         }
     }
 });
-
 
 /**
  * Event listener for pressing "X" on modal
