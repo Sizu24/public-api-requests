@@ -123,7 +123,7 @@ function generateInfo(data, num){
     const info = `
         <div class="card-info-container">
             <h3 id="name" class="card-name cap">${data[num].name.first} ${data[num].name.last}</h3>
-            <p class="card-text">${data.email}</p>
+            <p class="card-text">${data[num].email}</p>
             <p class="card-text cap">${data[num].location.city}, ${data[num].location.state}</p>
         </div>
     `;
